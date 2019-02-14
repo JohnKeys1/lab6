@@ -43,6 +43,49 @@ namespace lab6
                 db.SaveChanges();
             }
 
-         }   // Add posts to an existing blog by updating post.Blog object
+            using (var db = new MovieApp())
+            {
+                Movie movie = new Movie { Title = "Jurassic Park",Genre="Action"};
+                Studio StudioToUpdate = db.Studios.Include(b => b.Movies).Where(b => b.Name == "universal pictures").First();
+                StudioToUpdate.Movies.Add(movie);
+                db.SaveChanges();
+            }
+             using (var db = new MovieApp())
+            {
+                Movie movie = db.Movies.Where(m => m.Title == "Apollo3").First();
+                movie.studio = db.Studios.Where(b => b.Name == "universal pictures").First();
+                db.SaveChanges();
+            }
+             using (var db = new MovieApp())
+            {
+                Movie movie = db.Movies.Where(m => m.Title == "Deadpool").First();
+                Studio StudioToUpdate = db.Studios.Include(b => b.Movies).Where(b => b.Name == "20th century FOX").First();
+                StudioToUpdate.Movies.Remove(movie);
+                db.SaveChanges();
+            }
+        /* using (var db = new MovieApp()){
+            foreach (var b in Movies )
+                {
+                    Console.WriteLine($"StudioID: {b.studioId} {b.Studio}");
+                    foreach (var m in m.Movies)
+                    {
+                        Console.WriteLine($"\t{m.Title}");
+                    }
+                }
+                }*/ 
+                //Console.WriteLine("{0}",Movies,Studios);
+                using (var db = new MovieApp())
+            {
+                var studios = db.Studios.Include(b => b.Movies);
+                foreach (var b in studios)
+                {
+                    Console.WriteLine(b);
+                    foreach (var m in b.Movies)
+                    {
+                       Console.WriteLine("\t" + m);
+                    }
+                }
+            }
+         }   
     }
 }       
